@@ -10,6 +10,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import taskRoutes from './routes/taskRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const envPath = path.resolve(__dirname, '../config/.env');
@@ -31,6 +32,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(cookieParser());
 
+app.use(express.json());
+
 app.use(cors({
     origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -40,13 +43,14 @@ app.use(cors({
 app.use(logger('dev'));
 
 app.use("/tasks", taskRoutes);
+app.use("/users", userRoutes);
 
 app.post('/', (req, res) => {
     res.send('Hello World!');
 });
 
 // Error handling middleware (after all other app.use() and routes)
-/*app.use((req, res, next) => {
+app.use((req, res, next) => {
     next(createHttpError(404));
 });
 
@@ -56,7 +60,7 @@ app.use((err, req, res, next) => {
         message: err.message,
         error: req.app.get('env') === 'development' ? err : {}
     });
-});*/
+});
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

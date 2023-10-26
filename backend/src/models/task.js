@@ -9,6 +9,11 @@ const taskSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  completed: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
   // Additional properties for a task
 });
 taskSchema.methods.toJSON = function () {
@@ -18,4 +23,4 @@ taskSchema.methods.toJSON = function () {
 };
 const Task = mongoose.model('Task', taskSchema);
 
-export default Task;
+export default Task

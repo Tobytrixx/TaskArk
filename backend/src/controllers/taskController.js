@@ -1,14 +1,43 @@
 import Task from '../models/task.js';
 
+
+// Get all task
+export const getAllTasks = async (req, res) => {
+  try {
+    let tasks = await Task.find();
+
+    if (tasks.length === 0) {
+      return res.status(200).json({
+        message: "You currently have no tasks",
+        status: "success",
+      });
+    }
+
+    return res.status(200).json({
+      message: "operation successful",
+      status: "success",
+      data: tasks,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal service error, could not fetch data",
+      status: "failed",
+    });
+  }
+};
+
+
 // Create a new task
 export const createTask = async (req, res) => {
   console.log("hi")
     try {
-        const { title, description } = req.body;
+        const { title, description, completed } = req.body;
         // Create a new instance of the Task model
         const task = new Task({
           title,
           description,
+          completed,
         });
     
         // Save the task to the database
@@ -45,12 +74,12 @@ export const getTask = async (req, res) => {
 export const updateTask = async (req, res) => {
     try {
         const taskId = req.params.id;
-        const { title, description } = req.body;
+        const { title, description, completed } = req.body;
     
         // Find the task by ID in the database
         const task = await Task.findByIdAndUpdate(
           taskId,
-          { title, description },
+          { title, description, completed },
           { new: true }
         );
     
